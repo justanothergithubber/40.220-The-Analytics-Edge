@@ -1,0 +1,481 @@
+---
+title: "The Analytics Edge"
+author: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Week 1
+Commented out for quicker Knitting.
+
+<!-- ## Introduction -->
+
+<!-- We can store categorical responses as factors: -->
+<!-- ```{r wk1_categorical} -->
+<!-- x <- c("yes","no","yes","yes","no","maybe","maybe") -->
+<!-- class(x) -->
+<!-- y <- factor(x) -->
+<!-- summary(y) -->
+<!-- table(x) -->
+<!-- ``` -->
+
+<!-- We can also have numerical variables: -->
+<!-- ```{r wk1_numerical_1} -->
+<!-- inc <- c(1000,3000,500,200,14,25,345) -->
+<!-- ``` -->
+
+<!-- We can apply a function to people based on their responses: -->
+<!-- ```{r wk1_numerical_2} -->
+<!-- tapply(inc,x,mean) -->
+<!-- ``` -->
+
+<!-- Moving on to matrices -->
+<!-- ```{r wk1_matrices_1} -->
+<!-- m <- matrix(3:8,nrow=3,ncol=2) -->
+<!-- m #print m -->
+<!-- # Get the 1st row, 2nd column element -->
+<!-- m[1,2] -->
+<!-- # get the dimensions of the matrix -->
+<!-- dim(m) -->
+<!-- # get the fourth object (go down the 1st column, then 2nd, etc.) -->
+<!-- m[4] -->
+<!-- # get the second column -->
+<!-- m[,2] -->
+<!-- # We can also use arrays in R: -->
+<!-- s <- array(3:8,3:2) -->
+<!-- z<-1:50 -->
+<!-- # reshape -->
+<!-- dim(z) <- c(5,2,5) -->
+<!-- z[5,2,1:5] -->
+<!-- # diagonal matrix of size 10, identity of size 10 -->
+<!-- diag(10) -->
+<!-- # combine columns -->
+<!-- cbind(1:3,4:6) -->
+<!-- # combine rows -->
+<!-- rbind(1:3,4:6) -->
+<!-- ``` -->
+
+<!-- Moving on to matrix multiplication: -->
+<!-- ```{r wk1_matrices_2} -->
+<!-- z <- matrix(c(5,7,9,6,3,4),nrow=3,ncol=2) -->
+<!-- y <- matrix(c(1,3,0,9,5,-1),nrow=3,ncol=2) -->
+<!-- # We can do term-by-term multiplication -->
+<!-- z*y -->
+<!-- # get transpose -->
+<!-- t(y) -->
+<!-- # matrix multiply -->
+<!-- z%*%t(y) -->
+<!-- ``` -->
+
+<!-- ## Linear Algebra -->
+<!-- Solving equations: -->
+<!-- ```{r wk1_linalg_1} -->
+<!-- a <- array(c(2,1,-1,2),c(2,2)) -->
+<!-- b <- c(4,4) -->
+<!-- solve(a,b) -->
+<!-- ``` -->
+<!-- The `solve(a,b)` command solves the system of linear equations: -->
+<!-- $$ -->
+<!-- \mathbf{A}\vec{x}=b -->
+<!-- $$ -->
+<!-- It returns the vector $\vec{x}$. -->
+
+<!-- ```{r wk1_linalg_2} -->
+<!-- t <- eigen(a) # get eigendecomposition -->
+<!-- t$values      # eigenvalues -->
+<!-- t$vectors     # eigenvectors -->
+<!-- ``` -->
+<!-- ## Lists and Dataframes -->
+<!-- We can initialise lists and combine them: -->
+<!-- ```{r wk1_ls} -->
+<!-- # initialising some lists -->
+<!-- karthik<-list(age=37,sex="M",child.ages=c(1,1)) -->
+<!-- sam<-list(age=24,sex="F",child.ages=NA) -->
+<!-- c(karthik,sam) -->
+<!-- ``` -->
+<!-- As well as dataframes: -->
+<!-- ```{r wk1_df} -->
+<!-- d <- data.frame(names=c("karthik","sam","jim"), -->
+<!--                 ages=c(36,34,40), -->
+<!--                 sex=c("M","F","M"), -->
+<!--                 children=c(2,0,1)) -->
+<!-- d[,1] # get first column -->
+<!-- ``` -->
+<!-- R has a few public datasets part of the standard library. To get the list of datasets: -->
+<!-- ```{r wk1_datasets_1} -->
+<!-- data(package="datasets")$results[,3] -->
+<!-- # This prints a list of datasets available into the final R Markdown Document -->
+<!-- # Using the command `data()` will open a new window with the dataset names -->
+<!-- ``` -->
+<!-- ## Old Faithful -->
+<!-- To load the dataset relating to the Old Faithful geyser: -->
+<!-- ```{r wk1_datasets_2} -->
+<!-- data(faithful) #load the faithful dataset -->
+<!-- str(faithful) #get the structure of R -->
+<!-- # note that str does not mean string in R -->
+<!-- ``` -->
+
+<!-- We will do statistical analysis on the Old Faithful dataset: -->
+<!-- ```{r wk1_oldfaithful_1} -->
+<!-- plot(faithful) -->
+<!-- hist(faithful$eruptions) -->
+<!-- hist(faithful$eruptions,breaks=seq(1.6,5.2,0.2)) -->
+<!-- plot.ecdf(faithful$eruptions) -->
+<!-- qqnorm(faithful$eruptions) -->
+<!-- ``` -->
+
+<!-- We can see that the distribution seems bimodal, with a mixture of two normals. We can split the data into two parts and check the QQ plot again. -->
+<!-- ```{r wk1_oldfaithful_2} -->
+<!-- # To make it easier for, we assign the variable f to the dataset -->
+<!-- data("faithful")              # lazy load "faithful" -->
+<!-- delayedAssign("f", faithful)  # lazy assign "x" with a reference to "faithful" -->
+<!-- rm(faithful)                  # remove "faithful -->
+
+<!-- # in the faithful dataset, eruptions is the first column, so we can access like so -->
+<!-- f[,1] -->
+<!-- # look at the qqplot for those values below 3 -->
+<!-- qqnorm(f[,1][f[,1]<=3]) -->
+<!-- # above 3 -->
+<!-- qqnorm(f[,1][f[,1]>3]) -->
+<!-- # draw qq line to see fit -->
+<!-- qqline(f[,1][f[,1]>3]) -->
+<!-- ``` -->
+<!-- With the other column, which is the waiting times, we can do a test: -->
+<!-- ```{r wk1_oldfaithful_3} -->
+<!-- # subset to greater than 3 -->
+<!-- f_gr <- subset(f,f[,1]>3) -->
+<!-- mean(f_gr[,2]) -->
+<!-- t.test(f_gr[,2]) -->
+<!-- t.test(f_gr[,2]-mean(f_gr[,2])) -->
+<!-- ``` -->
+<!-- ## More Data Visualisation -->
+<!-- We will load the library `ggplot2`, and load the `WHO.csv` -->
+<!-- ```{r wk1_dataviz_1} -->
+<!-- library(ggplot2) -->
+<!-- setwd("D:/Downloads/40.220 The Analytics Edge/Week 1") -->
+<!-- w <- read.csv("WHO.csv") -->
+<!-- ``` -->
+<!-- First, we look at the structure of the dataset: -->
+<!-- ```{r wk1_dataviz_2} -->
+<!-- str(w) -->
+<!-- ``` -->
+<!-- Taking a deeper look at Singapore, we look at the row: -->
+<!-- ```{r wk1_dataviz_3} -->
+<!-- w[which(w$Country=="Singapore"),] -->
+<!-- ``` -->
+<!-- To compare against the globe, we look at some summaries: -->
+<!-- ```{r wk1_dataviz_4} -->
+<!-- summary(w$Under15) -->
+<!-- summary(w$Over60) -->
+<!-- ``` -->
+<!-- We can also look at some plots: -->
+<!-- ```{r wk1_dataviz_5} -->
+<!-- plot(w$GNI,w$FertilityRate) -->
+<!-- ``` -->
+
+<!-- The plot suggests there is some negative correlation between GNI and Fertility rate. -->
+
+<!-- Next, we will use the `ggplot2` library: -->
+<!-- ```{r wk1_dataviz_6} -->
+<!-- # plot points only -->
+<!-- ggplot(w,aes(x=GNI,y=FertilityRate)) + geom_point() -->
+<!-- # plot with some non-linear fit -->
+<!-- ggplot(w,aes(x=GNI,y=FertilityRate)) + geom_smooth() -->
+<!-- # color by region -->
+<!-- ggplot(w,aes(x=GNI,y=FertilityRate,color=Region)) + geom_point() -->
+<!-- ``` -->
+
+<!-- Next, we explore the crime dataset from Chicago. -->
+<!-- ```{r wk1_dataviz_7} -->
+<!-- setwd("D:/Downloads/40.220 The Analytics Edge/Week 1") -->
+<!-- x <- read.csv("crime.csv") -->
+<!-- ``` -->
+<!-- We can take a short look at the first few entries in our dataset -->
+<!-- ```{r wk1_dataviz_8} -->
+<!-- head(x) -->
+<!-- ``` -->
+
+<!-- We will need to format the time column in the dataset: -->
+<!-- ```{r wk1_dataviz_9} -->
+<!-- x$Date <- strptime(x$Date,format="%m/%d/%y %H:%M") -->
+<!-- ``` -->
+
+<!-- With this, we can apply the `weekdays` command, which we add to a new column -->
+<!-- ```{r wk1_dataviz_10} -->
+<!-- x$Weekday <- weekdays(x$Date) -->
+<!-- table(x$Weekday) -->
+<!-- ``` -->
+
+
+<!-- ```{r wk1_map_setup} -->
+<!-- library(maps) -->
+<!-- library(ggmap) -->
+<!-- ``` -->
+<!-- We can get te map information of Chicago, which we will assign to a variable called `chicago`. -->
+<!-- ```{r wk1_map_1} -->
+<!-- chicago <- get_map(location="chicago") -->
+<!-- ``` -->
+
+<!-- ```{r wk1_map_2} -->
+<!-- ggmap(chicago) -->
+<!-- ``` -->
+
+<!-- We need to prepare the data -->
+<!-- ```{r wk1_map_3} -->
+<!-- LatLongCount <- as.data.frame(table(round(x[,3],2),round(x[,2],2))) -->
+<!-- for (i in c(1,2)){ -->
+<!--  LatLongCount[,i] <- as.numeric(as.character(LatLongCount[,i])) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r wk1_map_4} -->
+<!-- ggmap(chicago) + geom_tile(data=LatLongCount,aes(x=Var1,y=Var2,alpha=Freq),fill="red") -->
+<!-- ``` -->
+
+# Week 2
+Commented out for quick Knitting
+
+<!-- We load the dataset using `setwd` and `read.csv`. -->
+<!-- ``` {r wk2_setup} -->
+<!-- setwd("D:/Downloads/40.220 The Analytics Edge/Week 2") -->
+<!-- wine <- read.csv("wine.csv") -->
+<!-- ``` -->
+
+<!-- We look at the structure of the data, -->
+<!-- ``` {r wk2_str} -->
+<!-- str(wine) -->
+<!-- ``` -->
+
+<!-- and then check for `NA` values. -->
+<!-- ``` {r wk2_isna} -->
+<!-- is.na(wine) -->
+<!-- ``` -->
+
+<!-- We start plotting -->
+<!-- ``` {r wk2_plots} -->
+<!-- plot(wine$VINT,wine$LPRICE) -->
+<!-- pairs(wine) -->
+<!-- ``` -->
+
+<!-- We can take a deeper look int the data by subsetting it -->
+<!-- ``` {r wk2_subset} -->
+<!-- winetrain <- subset(wine,wine$VINT <= 1978 & !is.na(wine$LPRICE)) -->
+<!-- winetest <- subset(wine,wine$VINT > 1978) -->
+<!-- ``` -->
+
+<!-- We are going to use linear regression, which is the following model: -->
+<!-- $$ -->
+<!-- y_{i}=\beta_{0}+\sum_{j}\beta{j}x_{ij}+\epsilon_{i}\\ -->
+<!-- \min_{\beta_{j},\forall j} \sum_{i}\left(y_{i}-\beta-\beta_{j}x_{ij}\right)\\ -->
+<!-- \forall i \in N, \forall j \in M -->
+<!-- $$ -->
+
+<!-- Now let's take the linear model -->
+<!-- ``` {r wk2_lm} -->
+<!-- model <- lm(LPRICE~VINT,winetrain) -->
+<!-- summary(model) -->
+<!-- ``` -->
+
+<!-- Back to plotting with the model: -->
+<!-- ``` {r wk2_stats} -->
+<!-- plot(winetrain$VINT,winetrain$LPRICE) -->
+<!-- abline(model) -->
+<!-- model$residuals -->
+<!-- sst <- sum((winetrain$LPRICE - mean(winetrain$LPRICE))^2) -->
+<!-- sse <- sum(model$residuals^2) -->
+<!-- rsq = 1- sse/sst -->
+<!-- abline(a=mean(winetrain$LPRICE),b=0) -->
+<!-- ``` -->
+
+<!-- EXTRA -->
+<!-- We can do a generalised linear model -->
+<!-- ``` {r wk2_glm} -->
+<!-- library(glmulti) -->
+<!-- gmodel <- glmulti(LPRICE~., data = winetrain, -->
+<!--                   level = 2, method = "g", -->
+<!--                   plotty = FALSE, -->
+<!--                   report = FALSE) -->
+<!-- summary(gmodel@objects[[1]]) -->
+<!-- ``` -->
+
+# Week 3
+Commented out for quick Knitting
+
+<!-- ## Space Shuttle Challenger -->
+<!-- We begin by reading the dataset. -->
+<!-- ```{r wk3_setup_1} -->
+<!-- setwd("D:/Downloads/40.220 The Analytics Edge/Week 3") -->
+<!-- orings <- read.csv("orings.csv") -->
+<!-- str(orings) -->
+<!-- head(orings) -->
+<!-- summary(orings) -->
+<!-- ``` -->
+
+<!-- We can apply some functions to the dataset: -->
+<!-- ```{r wk3_tapply} -->
+<!-- tapply(orings[,3],orings[,1],sum) # col 3 is Field, col 1 is Flight -->
+<!-- table(tapply(orings[,3],orings[,1],sum)) -->
+<!-- plot(orings[,4][orings[,3]>0],orings[,3][orings[,3]>0]) #col 4 is temp -->
+<!-- ``` -->
+
+<!-- Adding some random noise, -->
+<!-- ```{r wk3_jitter_1} -->
+<!-- plot(jitter(orings[,4][orings[,3]>0]),orings[,3][orings[,3]>0]) #col 4 is temp -->
+<!-- ``` -->
+
+<!-- Looking at the entire dataset: -->
+<!-- ```{r wk3_jitter_2} -->
+<!-- plot(jitter(orings[,4]),orings[,3]) -->
+<!-- ``` -->
+
+<!-- We can see that the majority of the high temperature points indicate less failures. -->
+
+<!-- We use a linear regression first, which we will see is not appropriate. -->
+<!-- ```{r wk3_lm} -->
+<!-- lin_mod <- lm(orings[,3]~orings[,4]) #failure vs temp -->
+<!-- summary(lin_mod) -->
+<!-- lin_mod2 <- lm(orings[,3]~orings[,4]+orings[,5]) #failure vs temp -->
+<!-- summary(lin_mod2) -->
+<!-- ``` -->
+
+<!-- ```{r wk3_glm} -->
+<!-- glmodel <- glm(orings[,3]~orings[,4]+orings[,5],family=binomial) -->
+<!-- summary(glmodel) -->
+<!-- ``` -->
+
+<!-- The lower the AIC, the better. We can do a simple stepwise search: -->
+<!-- ```{r wk3_stepaic} -->
+<!-- library(MASS) -->
+<!-- stepAIC(glm(orings[,3]~.,family=binomial,data=orings)) -->
+<!-- ``` -->
+<!-- ```{r wk3_glmulti} -->
+<!-- library(glmulti) -->
+<!-- oring_data_only <- orings[,-3] -->
+<!-- glmulti_model_obj <- glmulti(orings[,3]~., -->
+<!--                          data = oring_data_only, -->
+<!--                          level = 2, -->
+<!--                          plotty = F, -->
+<!--                          report = F, -->
+<!--                          method = "g") -->
+<!-- print(glmulti_model_obj) -->
+<!-- glmulti_model <- glmulti_model_obj@objects[[1]] -->
+<!-- summary(glmulti_model) -->
+<!-- ``` -->
+
+
+<!-- ```{r wk3_plotting} -->
+<!-- plot(jitter(orings$Temp),orings$Field) -->
+<!-- # curve(exp(coef(glmodel)[1]+coef(glmodel)[2:3]*x)/(1+exp(coef(glmodel)[1]+coef(glmodel)[2:3]*x)),add=T) -->
+<!-- ``` -->
+
+<!-- ```{r wk3_oring_roc} -->
+<!-- library(ROCR) -->
+<!-- pred <- predict(glmodel,newdata=orings,type="response") -->
+<!-- # only up to 138 before incident -->
+<!-- rocr_pred <- prediction(pred[1:138],orings[,3][1:138]) -->
+<!-- rocrperf <- performance(rocr_pred,measure="tpr",x.measure="fpr") -->
+<!-- plot(rocrperf) -->
+
+<!-- pred <- predict(glmulti_model,newdata=orings,type="response") -->
+<!-- # only up to 138 before incident -->
+<!-- rocr_pred <- prediction(pred[1:138],orings[,3][1:138]) -->
+<!-- rocrperf <- performance(rocr_pred,measure="tpr",x.measure="fpr") -->
+<!-- plot(rocrperf) -->
+<!-- ``` -->
+
+<!-- ## Framingham Health Study -->
+<!-- Next, we move on to the health dataset -->
+<!-- ```{r wk3_setup_2} -->
+<!-- setwd("D:/Downloads/40.220 The Analytics Edge/Week 3") -->
+<!-- fhs <- read.csv("framingham.csv") -->
+<!-- str(fhs) -->
+<!-- head(fhs) -->
+<!-- summary(fhs) -->
+<!-- ``` -->
+
+<!-- We wish to subset the data, looking only at people without a previous heart disease -->
+<!-- ```{r wk3_subset} -->
+<!-- fhs_sub <- subset(fhs,PREVCHD==0 & PERIOD==1) -->
+<!-- str(fhs_sub) -->
+<!-- length(unique(fhs_sub$RANDID)) -->
+<!-- ``` -->
+
+<!-- We focus on ten years, and only on cardiovascular diseases (rather than other causes of death). -->
+<!-- ```{r wk3_ten} -->
+<!-- fhs_sub$TENCHD <- as.integer((fhs_sub$TIMECHD/365)<=10) -->
+<!-- colnames(fhs_sub) -->
+<!-- which(colnames(fhs_sub)=="LDLC") -->
+<!-- fhs_sub<-fhs_sub[,c(1:21,40)] -->
+<!-- ``` -->
+
+<!-- Subsetting further, we can examine what we have -->
+<!-- ```{r wk3_subsub} -->
+<!-- str(fhs_sub) -->
+<!-- head(fhs_sub) -->
+<!-- ``` -->
+
+<!-- Using a package, we can split the dataset into training and testing data. -->
+<!-- ```{r wk3_sample_split} -->
+<!-- library(caTools) -->
+<!-- set.seed(1) # for standardization with class -->
+<!-- split <-sample.split(fhs_sub$TENCHD, SplitRatio = 0.65) -->
+<!-- head(split) -->
+<!-- train <- subset(fhs_sub,split==TRUE) -->
+<!-- str(train) -->
+<!-- test <- subset(fhs_sub,split==FALSE) -->
+<!-- str(test) -->
+<!-- ``` -->
+
+<!-- We can check that the subsets are balanced -->
+<!-- ```{r wk3_balance} -->
+<!-- table(train$TENCHD)[2]/(table(train$TENCHD)[1]+table(train$TENCHD)[2]) -->
+<!-- table(test$TENCHD)[2]/(table(test$TENCHD)[1]+table(test$TENCHD)[2]) -->
+<!-- ``` -->
+
+<!-- Building the model, -->
+<!-- ```{r wk3_fhs_model} -->
+<!-- ml=glm(TENCHD~.,data=train,family=binomial) -->
+<!-- summary(ml) -->
+<!-- ml3=glm(TENCHD~SEX+AGE+SYSBP+CIGPDAY+GLUCOSE,data=train,family=binomial) -->
+<!-- summary(ml3) -->
+<!-- ``` -->
+
+<!-- Trying an automated search: -->
+<!-- ```{r wk3_fhs_glmulti} -->
+<!-- library(glmulti) -->
+<!-- glmulti_model_obj <- glmulti(TENCHD~., -->
+<!--                              data = train, -->
+<!--                              level = 1, -->
+<!--                              family = 'binomial', -->
+<!--                              plotty = F, -->
+<!--                              report = F, -->
+<!--                              method = "g", -->
+<!--                              popsize = 64, -->
+<!--                              conseq = 2) -->
+<!-- print(glmulti_model_obj) -->
+<!-- glmulti_model <- glmulti_model_obj@objects[[1]] -->
+<!-- summary(glmulti_model) -->
+<!-- ``` -->
+
+<!-- ```{r wk3_fhs_roc} -->
+<!-- library(ROCR) -->
+<!-- pred <- predict(ml3, type="response", newdata = test) -->
+<!-- rocr_pred <- prediction(pred,test$TENCHD) -->
+<!-- rocrperf <- performance(rocr_pred,measure="tpr",x.measure="fpr") -->
+<!-- plot(rocrperf) -->
+<!-- perf <- performance(rocr_pred, measure = "auc") -->
+<!-- print(perf@y.values) -->
+<!-- pred <- predict(glmulti_model, type="response", newdata = test) -->
+<!-- rocr_pred <- prediction(pred,test$TENCHD) -->
+<!-- rocrperf <- performance(rocr_pred,measure="tpr",x.measure="fpr") -->
+<!-- plot(rocrperf) -->
+<!-- perf <- performance(rocr_pred, measure = "auc") -->
+<!-- print(perf@y.values) -->
+<!-- ``` -->
+
+# Week 4
+
